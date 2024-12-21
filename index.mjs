@@ -24,7 +24,7 @@ db.once('open',() => {
   console.log("Database Connected");
 });
 
-//app.use(flash())
+app.use(flash())
 app.use(express.static(path.join(path.resolve(), 'public')));
 app.use(express.static(path.join(path.resolve(), 'views')));
 app.set('view engine','ejs')
@@ -35,14 +35,20 @@ app.use(methodOverride('_method'))
 const sessionConfig = {
   secret : key ,
   resave : false,
-  saveUninitialized : true
+  saveUninitialized : true,
+  cookie : {
+    httpOnly : true,
+    expires : Date.now() + 1000*60*60*24*7, // a week 
+    maxAge : 1000*60*60*24*7
+  }
 }
 
 app.use(session(sessionConfig))
 
 app.use((req,res,next) =>{
-  //res.locals.success = req.flash('success')
-  //res.locals.error = req.flash('error')
+  res.locals.success = req.flash('success')
+  res.locals.error = req.flash('error')
+  res.locals.deleted= req.flash('deleted')
   next()
 })
 
