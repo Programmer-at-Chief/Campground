@@ -6,7 +6,10 @@ import cities from './cities.js';
 import {places,descriptors} from './seedHelpers.js'
 import axios from 'axios'
 import { LoremIpsum } from "lorem-ipsum";
-process.env.env
+const key = process.env.KEY
+const url = process.env.URL
+const default_url = process.env.DEFAULT
+
 
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
@@ -34,7 +37,7 @@ const getImage= async (query) =>{
     return img.data.urls.raw
   }
   catch(e) {
-    return 'https://images.unsplash.com/photo-1610513320995-1ad4bbf25e55?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bm90JTIwYXZhaWxhYmxlfGVufDB8fDB8fHww'
+    return default_url
   }
 }
 

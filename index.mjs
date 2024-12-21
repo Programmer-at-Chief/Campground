@@ -1,4 +1,5 @@
 import express from 'express';
+import session from 'express-session'
 import flash from 'connect-flash'
 import path from 'path';
 import mongoose from 'mongoose';
@@ -8,6 +9,7 @@ import methodOverride from 'method-override'
 import ejs_mate from 'ejs-mate'
 import campgrounds from './routes/campgrounds.mjs';
 import review from './routes/review.mjs'
+const key = process.env.SECRET_KEY
 
 mongoose.connect('mongodb://localhost:27017/project')
 
@@ -29,6 +31,14 @@ app.set('view engine','ejs')
 app.set('views',path.join(__dirname,'views'))
 app.use(express.urlencoded({extended : true}))
 app.use(methodOverride('_method'))
+
+const sessionConfig = {
+  secret : key ,
+  resave : false,
+  saveUninitialized : true
+}
+
+app.use(session(sessionConfig))
 
 app.use((req,res,next) =>{
   //res.locals.success = req.flash('success')
