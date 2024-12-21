@@ -1,0 +1,8 @@
+<% layout('layouts/boilerplate') %>
+<div class = 'm-auto text-red-700 w-1/2 bg-red-200 my-10 p-5'>
+  <h1 class = 'text-red-800 text-3xl'><%=err.message%></h1>
+  <h1 class = "text-red-700 text-2xl">Status : <%=err.status%></h1>
+  <hr class = 'bg-rose-700 h-1 my-2'>
+  <h2 class = 'text-md'><%=err.stack%></h2>
+  
+</div>
