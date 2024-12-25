@@ -1,8 +1,8 @@
 import {ReviewSchema} from '../schemas.mjs'
 import express, { Router } from 'express'
-import Campground from '../models/campground.js'
+import Campground from '../models/campground.mjs'
 import catchAsync from '../utils/catchAsync.mjs';
-import Review from '../models/review.js'
+import Review from '../models/review.mjs'
 
 const router = Router({mergeParams: true})
 
