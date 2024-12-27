@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import path from 'path';
-import Campground from '../models/campground.js'
+import Campground from '../models/campground.mjs'
 import fs from 'fs';
 import cities from './cities.js';
 import {places,descriptors} from './seedHelpers.js'
@@ -64,7 +64,8 @@ const seedDB = async () => {
       state: `${cities[random_1000].state}`,
       description: lorem.generateParagraphs(1),
       price: price,
-      image: imageURL
+      image: imageURL,
+      author : '676d9b8d986109e55015d2f0'
     })
     await camp.save();
   }

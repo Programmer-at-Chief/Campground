@@ -132,3 +132,4 @@ dist
 # My files
 /seeds/cities.js
 /seeds/seedHelpers.js
+/updates.txt

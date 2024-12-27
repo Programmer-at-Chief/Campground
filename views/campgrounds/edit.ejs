@@ -5,7 +5,7 @@
   <h1 class = 'text-3xl m-auto'>Update Campground</h1>
   <hr class = 'mt-2 h-2'>
   <div class = 'mt-3'>
-    <form method="POST" action='/campgrounds/<%=camp._id%>/edit?_method=PUT' novalidate id='form'>
+    <form method="POST" action='/campgrounds/<%=camp._id%>/?_method=PUT' novalidate id='form'>
       <img class = 'm-auto' src="<%= camp.image%>" alt="<%=camp.title%>">
       <div class = 'flex place-items-center mt-3'>
         <label for="state">Image URL</label>

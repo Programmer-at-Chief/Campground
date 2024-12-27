@@ -15,7 +15,20 @@ const userSchema = new Schema ({
   lastname : {
     type : String,
     required: true,
-  }
+  },
+  camps : [
+    {
+    type : Schema.Types.ObjectId,
+    ref : 'Ground'
+    }
+  ],
+  reviews: [
+    {
+    type : Schema.Types.ObjectId,
+    ref : 'Review'
+    }
+  ],
+
 })
 
 userSchema.plugin(passport) // this will automatically add user name and password field

@@ -15,18 +15,23 @@
     <hr class = 'w-full h-[1px] bg-gray-100'>
     <h2 class = 'p-2'>$ <%=camp.price%> / night</h2>
     <hr class = 'w-full h-[1px] bg-gray-100'>
+    <h2 class = 'p-2'>Submitted By <a class = 'underline text-blue-600' href="/<%=camp.author._id%>"><%=camp.author.username%></a></h2>
+    <hr class = 'w-full h-[1px] bg-gray-100'>
+    <% if ( currentUser && camp.author.equals(currentUser._id)) {%>
     <div class = 'flex py-2 px-2'>
       <a class = 'px-3 py-1 bg-green-700 rounded-md text-white hover:bg-green-800' href="/campgrounds/<%=camp._id%>/edit">Edit</a>
       <!--<a href="/campgrounds/<%=camp._id%>/delete?_method=DELETE">Delete</a>-->
-      <form class = 'ml-1 px-3 py-1 bg-red-700 rounded-md text-white hover:bg-red-800' action="/campgrounds/<%=camp._id%>/delete?_method=DELETE" method='post'>
+      <form class = 'ml-1 px-3 py-1 bg-red-700 rounded-md text-white hover:bg-red-800' action="/campgrounds/<%=camp._id%>/?_method=DELETE" method='post'>
         <button type="submit">Delete</button>
       </form> 
     </div>
+    <%}%>
     <span class = 'block pl-2 py-1 bg-gray-100 w-full grow text-gray-600'>2 days ago</span>
 
   </div>
 
   <div class = 'reviews right w-1/3'>
+    <% if (currentUser){ %>
     <div class = 'flex flex-col p-2'>
       <h1 class = 'text-3xl'>Leave a Review</h1>
       <form action = "http://localhost:3000/campgrounds/<%=camp._id%>/reviews" method = 'POST' novalidate id= "review_form">
@@ -43,17 +48,21 @@
         <button class = 'block my-3 bg-green-300 px-3 py-2 rounded-md border-[1px] border-green-500 hover:bg-green-400' type="submit">Submit</button>
       </form>
     </div>
-
+    <%}%>
 
     <h1 class = 'text-3xl '>Reviews</h1>
     <%for (let review of camp.reviews){%>
     <div class = 'm-2 p-2 border-[1px] rounded-md border-gray-300'>
-      <div class= 'flex justify-between'>
-        
-      <span class = 'stars'> Rating : <%=review.rating%>  </span>
-      <form class = 'ml-1 px-3 bg-red-700 rounded-md text-white hover:bg-red-800 inline place-self-end' action="/campgrounds/<%=camp._id%>/reviews/<%=review._id%>?_method=DELETE" method='post'>
-        <button type="submit">Delete</button>
-      </form> 
+      <div class= 'flex flex-col justify-between'>
+        <span class = 'block justify-between flex'>
+          <span class = 'author'> By <a href="/<%=review.author.id%>" class = 'underline text-blue-600'><%=review.author.username%></a></span>
+          <span class = 'stars mr-3'> <%-review.stars%>  </span>
+          <% if ( currentUser && review.author.equals(currentUser._id)) {%>
+          <form class = 'ml-1 px-3 bg-red-700 rounded-md text-white hover:bg-red-800 inline place-self-end' action="/campgrounds/<%=camp._id%>/reviews/<%=review._id%>?_method=DELETE" method='post'>
+            <button type="submit">Delete</button>
+          </form> 
+          <%}%>
+        </span>
       </div>
       <h1><%=review.body%></h1>
     </div>

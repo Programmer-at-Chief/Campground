@@ -14,13 +14,17 @@ const ground = new Schema({
     type : Schema.Types.ObjectId,
     ref : 'Review'
     }
-  ]
-})
-
-ground.post('findOneAndDelete',async function (campground) {
-  if (campground.reviews.length){
-    await Review.deleteMany({_id : { $in : campground.reviews}})
+  ],
+  author : {
+    type : Schema.Types.ObjectId,
+    ref: 'User'
   }
 })
+
+//ground.post('findOneAndDelete',async function (campground) {
+//  if (campground.reviews.length){
+    //await Review.deleteMany({_id : { $in : campground.reviews}})
+//  }
+//})
 
 export default mongoose.model('Ground',ground)
