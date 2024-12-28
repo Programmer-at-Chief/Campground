@@ -1,11 +1,47 @@
 <% layout('layouts/boilerplate') %>
-<script src = '/js/review_validation.js' type= 'module'> </script>
-<script src = '/js/stars.js' type='module'></script>
+<link rel="stylesheet" type="" href="/styles/stars.css">
+
 
 <div class = 'flex justify-center space-x-8 my-3'>
   <div class = 'card border-gray-100 w-1/3 my-2'>
 
-    <img class = 'object-contain w-full h-auto ' src="<%=camp.image%>" alt="<%=camp.title%>">
+    <%if (camp.images.length !== 1){%>
+    <div class="relative">
+      <div class="carousel max-w-xl flex overflow-hidden ">
+        <!-- Carousel items -->
+        <!--<%#for (let image of camp.images){%>-->
+        <% camp.images.forEach((img,i)  => {%>
+        <div class="carousel-item <%= i === 0 ? 'active' : ''%> min-w-full">
+          <!--<img class = 'object-contain w-full h-auto ' src="<%#=image.url%>" alt="<%#=camp.title%>">-->
+          <img class = 'w-full h-auto object-cover' src="<%=img.url%>" alt="<%=camp.title%>">
+        </div>
+        <%})%>
+
+        <!-- Carousel controls -->
+        <div class="absolute inset-y-0 left-0 flex items-center justify-start pl-4">
+          <button
+            class="carousel-control-prev bg-gray-800 hover:bg-gray-700 text-white rounded-full p-2 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="absolute inset-y-0 right-0 flex items-center justify-end pr-4">
+          <button
+            class="carousel-control-next bg-gray-800 hover:bg-gray-700 text-white rounded-full p-2 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <%}else{%>
+      <img class = 'object-contain w-full h-auto ' src="<%=camp.images[0].url%>" alt="<%=camp.title%>">
+    <%}%>
+
     <div class = 'mt-3 p-2'>
       <h2 class = 'text-xl mb-2'><%=camp.title%></h2>
       <h2><%=camp.description%></h2>
@@ -32,13 +68,25 @@
 
   <div class = 'reviews right w-1/3'>
     <% if (currentUser){ %>
+    <script src = '/js/review_validation.js' type= 'module'> </script>
     <div class = 'flex flex-col p-2'>
       <h1 class = 'text-3xl'>Leave a Review</h1>
       <form action = "http://localhost:3000/campgrounds/<%=camp._id%>/reviews" method = 'POST' novalidate id= "review_form">
         <div class = 'flex my-2 align-center'>
-          <label for="rating">Rating : </label>
-          <input class = 'ml-2 ' type="range" min= '1' max = '5' name="review[rating]" id = 'rating' value="1">
-          <span class = 'text-xl ml-3 pb-1 fill-yellow-400' id = 'rating_value'><svg class = 'w-[25px] h-[25px] mr-1 inline ' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>star</title><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg></span>
+          <fieldset class="starability-checkmark">
+            <!--<input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />-->
+            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+          </fieldset>
+
         </div>
         <div class = 'my-2 flex'>
           <label for="review">Review : </label>
@@ -55,22 +103,23 @@
     <div class = 'm-2 p-2 border-[1px] rounded-md border-gray-300'>
       <div class= 'flex flex-col justify-between'>
         <span class = 'block justify-between flex'>
-          <span class = 'author'> By <a href="/<%=review.author.id%>" class = 'underline text-blue-600'><%=review.author.username%></a></span>
-          <span class = 'stars mr-3'> <%-review.stars%>  </span>
-          <% if ( currentUser && review.author.equals(currentUser._id)) {%>
-          <form class = 'ml-1 px-3 bg-red-700 rounded-md text-white hover:bg-red-800 inline place-self-end' action="/campgrounds/<%=camp._id%>/reviews/<%=review._id%>?_method=DELETE" method='post'>
-            <button type="submit">Delete</button>
-          </form> 
-          <%}%>
+          <span class = 'author'> <a href="/<%=review.author.id%>" class = 'underline text-blue-600'><%=review.author.username%></a></span>
+          <span class = 'starability-result' data-rating = '<%=review.rating%>'></span>
         </span>
       </div>
       <h1><%=review.body%></h1>
+      <% if ( currentUser && review.author.equals(currentUser._id)) {%>
+
+      <form class = 'px-3 py-1 bg-red-700 rounded-md text-white hover:bg-red-800 inline place-self-end' action="/campgrounds/<%=camp._id%>/reviews/<%=review._id%>?_method=DELETE" method='post'>
+        <button class = 'my-2' type="submit">Delete</button>
+      </form> 
+
+      <%}%>
     </div>
     <%}%>
 
   </div>
 
 </div>
-<!--<h1>Campground Camp </h1>-->
 
-
+<script src = '/js/image_carousel.js' type = 'module'> </script>

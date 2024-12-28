@@ -8,7 +8,12 @@ const ground = new Schema({
   city: String,
   state: String,
   description: String,
-  image: String,
+  images: [
+    {
+      url : String,
+      filename : String
+    }
+  ],
   reviews: [
     {
     type : Schema.Types.ObjectId,

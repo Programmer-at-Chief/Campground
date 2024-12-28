@@ -19,7 +19,7 @@ const create_review = async (req,res) => {
 const delete_review = async (req,res) =>{
   const {id,review_id} = req.params
   await Campground.findOneAndUpdate({_id : id}, { $pull : {reviews : review_id}})
-  await User.findOneAndUpdate({_id : currentUser._id}, { $pull : {reviews : review_id}})
+  await User.findOneAndUpdate({_id : res.locals.currentUser._id}, { $pull : {reviews : review_id}})
   await Review.deleteOne({_id : review_id})
   res.redirect(`/campgrounds/${id}`)
 }

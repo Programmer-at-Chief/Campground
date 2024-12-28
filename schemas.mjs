@@ -5,8 +5,9 @@ export const CampgroundSchema = Joi.object({
   city : Joi.string().required(),
   state: Joi.string().required(),
   price : Joi.number().required().min(0),
-  image : Joi.string().uri().allow('', null),
-  description: Joi.string().allow('',null).max(1500)
+  //images : Joi.array().max(10).allow('', null),
+  description: Joi.string().allow('',null).max(1500),
+  deletedImages : Joi.array()
 })
 
 

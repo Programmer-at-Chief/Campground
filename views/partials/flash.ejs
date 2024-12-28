@@ -21,3 +21,15 @@
 
 <script src = '/js/flash.js'></script>
 <%}%>
+
+<% if (warning.length != 0 ) {%>
+<div class="bg-red-100 mx-20 py-2 lg:px-4" role = 'alert'>
+  <div class="sticky mx-auto my-2 p-2 px-5 mx-5 bg-red-800 items-center text-indigo-100 leading-none flex rounded" role="alert">
+    <div class="bg-red-500 text-white font-bold rounded px-4 mr-2 py-2">warning : </div>
+    <span class="font-semibold mr-2 text-left flex-auto"><%=warning%></span>
+    <svg id='close_button' class="fill-current opacity-75 h-6 w-6 hover:opacity-100 hover:bg-red-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>close</title><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" /></svg>
+  </div>
+</div>
+
+<script src = '/js/flash.js'></script>
+<%}%>

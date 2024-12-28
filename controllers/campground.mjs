@@ -1,8 +1,7 @@
 import Campground from "../models/campground.mjs";
 import Review from "../models/review.mjs";
 import User from '../models/user.mjs'
-import generateStars from '../utils/generateStars.mjs'
-import flash from 'connect-flash'
+import { cloudinary } from "../cloudinary/index.mjs";
 
 const index = async (req,res,next)=> {
   const camps = await Campground.find({});
@@ -14,14 +13,30 @@ const new_form = (req,res) => {
 }
 
 const create_campground = async (req,res,next) => {
-  const {title,city,state,description,image,price} = req.body
-  const campground = new Campground({title: title, city: city,state: state,description: description,price : Number(price), image : image || 'https://images.unsplash.com/photo-1610513320995-1ad4bbf25e55?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bm90JTIwYXZhaWxhYmxlfGVufDB8fDB8fHww',author : res.locals.currentUser._id})
-  res.locals.currentUser.camps.push(campground)
-  await campground.save()
-  await res.locals.currentUser.save()
-  req.flash('success','Successfully registered campground.')
-  res.redirect(`/campgrounds/${campground._id}`)
+  try{
+    const {title,city,state,description,price} = req.body
+    const campground = new Campground({title: title, city: city,state: state,description: description,price : Number(price),author : res.locals.currentUser._id})
+    campground.images = await req.files.map(f => ({ url : f.path,filename : f.filename }))
+    if (campground.images.length > 6) {
+      req.flash('warning','Only upto 6 images can be registered with a campground')
+      campground.images = campground.images.splice(6)
+    }
+    await Promise.all([
+      
+      res.locals.currentUser.camps.push(campground),
+      campground.save(),
+      res.locals.currentUser.save(),
+    ]);
+
+    req.flash('success','Successfully registered campground.')
+    res.redirect(`/campgrounds/${campground._id}`)
+  }
+  catch {
+    req.flash('error','Some error occured, could not register camp.')
+    res.redirect('/campgrounds/')
+  }
 }
+
 const show_campground = async (req,res) =>{
   const {id} = req.params
   const camp = await Campground.findOne({ _id : id}).populate({
@@ -39,9 +54,6 @@ const show_campground = async (req,res) =>{
     req.flash("error",'Campgroud not found')
     return res.redirect('/campgrounds')
   }
-  for (let review of camp.reviews){
-    review.stars = generateStars(review.rating)
-  }
   res.render('campgrounds/show',{camp})
 
 }
@@ -54,8 +66,20 @@ const edit_form =  async (req,res) => {
 
 const update_camp = async (req,res,next) =>{
   const {id} = req.params
-    const {title,city,state,price,description,image} =req.body
-  await Campground.updateOne({_id : id},{title: title, city: city,state: state,description: description,price : price,image: image || 'https://images.unsplash.com/photo-1610513320995-1ad4bbf25e55?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bm90JTIwYXZhaWxhYmxlfGVufDB8fDB8fHww'})
+  const {title,city,state,price,description} =req.body
+  const camp = await Campground.findById(id)
+  let images = camp.images
+  if (req.body.deletedImages){
+    for (let file of req.body.deletedImages){
+      await cloudinary.uploader.destroy(file)
+    }
+    //Campground.updateOne({$pull : {images : {filename : { $in : req.body.deletedImages}}}})
+    images = images.filter(obj => !req.body.deletedImages.includes(obj.filename))
+  }
+  for (let image of req.files){
+    images.push({url: image.path, filename : image.filename})
+  }
+  await Campground.updateOne({_id : id},{title: title, city: city,state: state,description: description,price : price,images: images})
   req.flash('success','Successfully updated campground.')
   res.redirect(`/campgrounds/${id}`)
 }
