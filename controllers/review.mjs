@@ -5,6 +5,10 @@ import User from '../models/user.mjs'
 const create_review = async (req,res) => {
   const {id} = req.params
   const campground = await Campground.findOne({_id : id})
+  if (!req.body.review.rating){
+    req.body.review.rating = 5;
+  }
+  console.log(req.body.review)
   const review = new Review(req.body.review)
   review.camp = id
   review.author = req.user._id

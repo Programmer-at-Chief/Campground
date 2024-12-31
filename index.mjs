@@ -1,4 +1,5 @@
 import express from 'express';
+import { configDotenv } from 'dotenv';
 import session from 'express-session'
 import flash from 'connect-flash'
 import path from 'path';
@@ -13,6 +14,8 @@ import passport from 'passport';
 import passport_local from 'passport-local'
 import User from './models/user.mjs';
 import user from './routes/user.mjs';
+
+configDotenv()
 const key = process.env.SECRET_KEY
 
 mongoose.connect('mongodb://localhost:27017/project')

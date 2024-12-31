@@ -15,7 +15,7 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
-    "cloudinary": "^2.5.1",
+    "cloudinary": "^1.41.3",
     "connect-flash": "^0.1.1",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
@@ -24,8 +24,9 @@
     "express-session": "^1.18.1",
     "joi": "^17.13.3",
     "lorem-ipsum": "^2.0.8",
+    "maplibre-gl": "^4.7.1",
     "method-override": "^3.0.0",
-    "mongoose": "^8.9.0",
+    "mongoose": "^8.9.3",
     "morgan": "^1.10.0",
     "multer": "1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
@@ -33,6 +34,7 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^8.0.0",
     "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.16"
+    "radar-sdk-js": "^4.3.0",
+    "tailwindcss": "^3.4.17"
   }
 }

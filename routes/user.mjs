@@ -5,6 +5,10 @@ import user from '../controllers/user.mjs'
 
 const router = express.Router({mergeParams: true})
 
+router.route('/map').get((req,res) =>{
+  res.render("map.ejs")
+})
+
 router.route('/register')
   .get(user.register_page)
   .post(catchAsync(user.register_user))
