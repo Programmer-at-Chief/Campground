@@ -21,7 +21,8 @@ import MongoStore from 'connect-mongo';
 
 
 const key = process.env.SECRET_KEY
-const dbUrl = 'mongodb://localhost:27017/project' 
+//const dbUrl = 'mongodb://localhost:27017/project' 
+const dbUrl = process.env.DB_URL 
 
 mongoose.connect(dbUrl)
 

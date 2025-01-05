@@ -8,7 +8,6 @@ const create_review = async (req,res) => {
   if (!req.body.review.rating){
     req.body.review.rating = 5;
   }
-  console.log(req.body.review)
   const review = new Review(req.body.review)
   review.camp = id
   review.author = req.user._id
