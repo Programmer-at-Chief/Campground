@@ -7,7 +7,7 @@ import Review from './models/review.mjs'
 const isLoggedIn = (req,res,next) => {
   if (!req.isAuthenticated()){
     req.flash('error', 'Not logged in ')
-    return res.redirect('/login')
+    return res.redirect('/user/login')
   }
   next()
 }

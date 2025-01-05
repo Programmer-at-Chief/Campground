@@ -1,15 +1,9 @@
-const close_button = document.querySelector('#close_button')
-const alert = close_button.parentElement.parentElement
+const nots = document.querySelectorAll('.notification');
+for (let notification of nots){
+  notification.addEventListener('click', () => {
+    notification.classList.add('hidden');
+  });
 
-function closeAlert() {
-  alert.classList.add('opacity-0');
-  alert.hidden = true;
-
-  setTimeout(function() {
-    alert.style.display = 'none'; 
-  }, 500);
+  // Wait 3 seconds before triggering closeAlert
+  setTimeout(() => { notification.classList.add('hidden')}, 3000);
 }
-
-close_button.addEventListener('click',closeAlert)
-
-setTimeout(closeAlert, 3000);

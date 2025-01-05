@@ -1,36 +1,56 @@
 <% if ( success.length > 0) {%>
-<div class="bg-green-100 mx-36 py-2 lg:px-4" role = 'alert'>
-  <div class="p-2 px-5 mx-5 bg-green-800 items-center text-indigo-100 leading-none flex rounded" role="alert">
-    <div class="bg-green-500 text-white font-bold rounded px-4 mr-2 py-2">Success : </div>
-    <span class="font-semibold mr-2 text-left flex-auto"><%=success%></span>
-    <svg id='close_button' class="fill-current opacity-75 h-6 w-6 hover:opacity-100 hover:bg-green-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>close</title><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" /></svg>
-  </div>
+<div class="absolute z-100 right-5 top-14 min-w-36 notification" >
+    <div class="flex bg-white dark:bg-gray-900 items-center px-6 py-2 text-sm border-t-2 rounded-b shadow-sm border-green-500 hover:border-t-0 hover:border-b-2">
+        <svg viewBox="0 0 24 24" class="w-8 h-8 text-green-500 stroke-current" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M12 8V12V8ZM12 16H12.01H12ZM21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <div class="ml-3">
+            <div class="font-bold text-left text-black dark:text-gray-50">Success</div>
+      <div class="w-full text-gray-900 dark:text-gray-300 mt-1"><%=success%></div>
+        </div>
+    </div>
 </div>
-<script src = '/js/flash.js'></script>
 
 <%}%>
 
 
 <% if (error.length != 0 ) {%>
-<div class="bg-red-100 mx-20 py-2 lg:px-4" role = 'alert'>
-  <div class="sticky mx-auto my-2 p-2 px-5 mx-5 bg-red-800 items-center text-indigo-100 leading-none flex rounded" role="alert">
-    <div class="bg-red-500 text-white font-bold rounded px-4 mr-2 py-2">Error : </div>
-    <span class="font-semibold mr-2 text-left flex-auto"><%=error%></span>
-    <svg id='close_button' class="fill-current opacity-75 h-6 w-6 hover:opacity-100 hover:bg-red-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>close</title><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" /></svg>
-  </div>
+<div class="absolute z-100 right-5 top-14 min-w-36 notification" >
+    <div class="flex bg-white dark:bg-gray-900 items-center px-6 py-2 text-sm border-t-2 rounded-b shadow-sm border-red-500 hover:border-t-0 hover:border-b-2">
+        <svg viewBox="0 0 24 24" class="w-8 h-8 text-red-500 stroke-current" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M12 8V12V8ZM12 16H12.01H12ZM21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <div class="ml-3">
+            <div class="font-bold text-left text-black dark:text-gray-50">Error</div>
+      <div class="w-full text-gray-900 dark:text-gray-300 mt-1"><%=error%></div>
+        </div>
+    </div>
 </div>
 
-<script src = '/js/flash.js'></script>
+
 <%}%>
 
 <% if (warning.length != 0 ) {%>
-<div class="bg-red-100 mx-20 py-2 lg:px-4" role = 'alert'>
-  <div class="sticky mx-auto my-2 p-2 px-5 mx-5 bg-red-800 items-center text-indigo-100 leading-none flex rounded" role="alert">
-    <div class="bg-red-500 text-white font-bold rounded px-4 mr-2 py-2">warning : </div>
-    <span class="font-semibold mr-2 text-left flex-auto"><%=warning%></span>
-    <svg id='close_button' class="fill-current opacity-75 h-6 w-6 hover:opacity-100 hover:bg-red-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>close</title><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" /></svg>
-  </div>
+<div class="absolute z-100 right-5 top-14 min-w-36 notification" >
+    <div class="flex bg-white dark:bg-gray-900 items-center px-6 py-2 text-sm border-t-2 rounded-b shadow-sm border-red-500 hover:border-t-0 hover:border-b-2">
+        <svg viewBox="0 0 24 24" class="w-8 h-8 text-red-500 stroke-current" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M12 8V12V8ZM12 16H12.01H12ZM21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <div class="ml-3">
+            <div class="font-bold text-left text-black dark:text-gray-50">Warning</div>
+      <div class="w-full text-gray-900 dark:text-gray-300 mt-1"><%=warning%></div>
+        </div>
+    </div>
 </div>
+<%}%>
 
 <script src = '/js/flash.js'></script>
-<%}%>

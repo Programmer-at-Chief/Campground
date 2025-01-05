@@ -9,12 +9,13 @@ const map_token = '<%- process.env.MAP_KEY%>'
 const lat = '<%- camp.geometry.coordinates[0]%>'
 const long = '<%- camp.geometry.coordinates[1]%>'
 const title = '<%- camp.title%>'
-const img = '<%- camp.images[0] %>' || 'https://res.cloudinary.com/meinkampf/image/upload/v1735676199/error_jw3vqk.png'
+const img = <%- camp.images && camp.images.length > 0 ? JSON.stringify(camp.images[0].url) : '"https://res.cloudinary.com/meinkampf/image/upload/v1735676199/error_jw3vqk.png"' %>;
 </script>
 
-<!--<script src = '/js/map.js' type='module' ></script>-->
+<div class = 'bg-teal-900'>
+  
 <div class = 'flex w-full justify-center mt-5'>
-  <div id="map" style="width: 80%; height: 400px;"></div>
+  <div class = 'rounded-lg border-[2px] p-4 border-cyan-300' id="map" style="width: 80%; height: 400px;"></div>
 </div>
 
 <script src = '/js/map.js'></script>
@@ -64,15 +65,15 @@ const img = '<%- camp.images[0] %>' || 'https://res.cloudinary.com/meinkampf/ima
     <%}%>
 
     <div class = 'mt-3 p-2'>
-      <h2 class = 'text-xl mb-2'><%=camp.title%></h2>
-      <h2><%=camp.description%></h2>
+      <h2 class = 'text-xl mb-2 text-cyan-100'><%=camp.title%></h2>
+      <h2 class = 'text-white'><%=camp.description%></h2>
     </div>
     <hr class = 'w-full h-[1px] bg-gray-100'>
-    <h2 class = 'p-2'><%=camp.city%>, <%=camp.state%></h2>
+    <h2 class = 'p-2 text-sky-200'><%=camp.state%>, <%=camp.country%></h2>
     <hr class = 'w-full h-[1px] bg-gray-100'>
-    <h2 class = 'p-2'>$ <%=camp.price%> / night</h2>
+    <h2 class = 'p-2 text-sky-300'>$ <%=camp.price%> / night</h2>
     <hr class = 'w-full h-[1px] bg-gray-100'>
-    <h2 class = 'p-2'>Submitted By <a class = 'underline text-blue-600' href="/<%=camp.author._id%>"><%=camp.author.username%></a></h2>
+    <h2 class = 'p-2 text-sky-400'>Submitted By <a class = 'underline text-blue-400' href="/user/<%=camp.author._id%>"><%=camp.author.username%></a></h2>
     <hr class = 'w-full h-[1px] bg-gray-100'>
     <% if ( currentUser && camp.author.equals(currentUser._id)) {%>
     <div class = 'flex py-2 px-2'>
@@ -83,7 +84,8 @@ const img = '<%- camp.images[0] %>' || 'https://res.cloudinary.com/meinkampf/ima
       </form> 
     </div>
     <%}%>
-    <span class = 'block pl-2 py-1 bg-gray-100 w-full grow text-gray-600'>2 days ago</span>
+      <span class = 'block pl-2 py-1 bg-green-200 w-full grow text-gray-600'>Created on : <%-time%></span>
+      <span class = 'block pl-2 py-1 bg-green-200 w-full grow text-gray-600'>Last Edited : <%- new Date(camp.lastEdited).toDateString()%></span>
 
   </div>
 
@@ -91,7 +93,7 @@ const img = '<%- camp.images[0] %>' || 'https://res.cloudinary.com/meinkampf/ima
     <% if (currentUser){ %>
     <script src = '/js/review_validation.js' type= 'module'> </script>
     <div class = 'flex flex-col p-2'>
-      <h1 class = 'text-3xl'>Leave a Review</h1>
+      <h1 class = 'text-3xl text-cyan-200'>Leave a Review</h1>
       <form action = "http://localhost:3000/campgrounds/<%=camp._id%>/reviews" method = 'POST' novalidate id= "review_form">
         <div class = 'flex my-2 align-center'>
           <fieldset class="starability-checkmark">
@@ -110,8 +112,8 @@ const img = '<%- camp.images[0] %>' || 'https://res.cloudinary.com/meinkampf/ima
 
         </div>
         <div class = 'my-2 flex'>
-          <label for="review">Review : </label>
-          <textarea class = 'ml-2 grow py-1 border-[2px]' id="review" name = 'review[body]' rows="4" required title= "Don't leave an empty value" maxlength="800"></textarea>
+          <label class = 'text-cyan-300' for="review">Review : </label>
+          <textarea class = 'ml-2 grow border-[2px] bg-green-200 p-2 text-emerald-800' id="review" name = 'review[body]' rows="4" required title= "Don't leave an empty value" maxlength="800"></textarea>
         </div>
         <span class = 'text-red-500 mt-1 pl-16 ' id = 'review_error'></span>
         <button class = 'block my-3 bg-green-300 px-3 py-2 rounded-md border-[1px] border-green-500 hover:bg-green-400' type="submit">Submit</button>
@@ -119,16 +121,16 @@ const img = '<%- camp.images[0] %>' || 'https://res.cloudinary.com/meinkampf/ima
     </div>
     <%}%>
 
-    <h1 class = 'text-3xl '>Reviews</h1>
+    <h1 class = 'text-3xl text-cyan-200'>Reviews</h1>
     <%for (let review of camp.reviews){%>
-    <div class = 'm-2 p-2 border-[1px] rounded-md border-gray-300'>
+    <div class = 'm-2 p-2 border-[1px] rounded-md border-cyan-300'>
       <div class= 'flex flex-col justify-between'>
         <span class = 'block justify-between flex'>
-          <span class = 'author'> <a href="/<%=review.author.id%>" class = 'underline text-blue-600'><%=review.author.username%></a></span>
+          <span class = 'author'> <a href="/<%=review.author.id%>" class = 'underline text-blue-400 underline-offset-4'><%=review.author.username%></a></span>
           <span class = 'starability-result' data-rating = '<%=review.rating%>'></span>
         </span>
       </div>
-      <h1><%=review.body%></h1>
+      <h1 class = ' text-green-200'><%=review.body%></h1>
       <% if ( currentUser && review.author.equals(currentUser._id)) {%>
 
       <form class = 'px-3 py-1 bg-red-700 rounded-md text-white hover:bg-red-800 inline place-self-end' action="/campgrounds/<%=camp._id%>/reviews/<%=review._id%>?_method=DELETE" method='post'>
@@ -143,3 +145,4 @@ const img = '<%- camp.images[0] %>' || 'https://res.cloudinary.com/meinkampf/ima
 
 </div>
 
+</div>

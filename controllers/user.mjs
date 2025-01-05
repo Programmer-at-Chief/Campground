@@ -9,7 +9,7 @@ const register_user = async (req,res) =>{
   const {username,firstname,lastname,password,c_password,email} = req.body
   if (password !==c_password){
     req.flash('error','Password and confirmed password are not same')
-    return res.redirect('/register')
+    return res.redirect('/user/register')
   }
   const user = new User({
     username : username,
@@ -22,10 +22,10 @@ const register_user = async (req,res) =>{
   }
   catch (e){
     req.flash('error',e.message)
-    return res.redirect('/register')
+    return res.redirect('/user/register')
   }
   req.flash('success','Welcome to YelpCamp!')
-  res.redirect('/login')
+  res.redirect('/user/login')
 }
 
 const login_page = (req,res)=>{
@@ -46,7 +46,7 @@ const logout_user = (req,res)=>{
     }
     res.locals.currentUser = null; 
     req.flash('success', 'Goodbye !!');
-    res.redirect('/login');
+    res.redirect('/user/login');
   });
 }
 

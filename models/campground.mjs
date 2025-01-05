@@ -14,8 +14,8 @@ ImageSchema.virtual('thumbnail').get(function(){
 const ground = new Schema({
   title : String,
   price: Number,
-  city: String,
   state: String,
+  country: String,
   description: String,
   images: [ImageSchema],
   reviews: [
@@ -38,13 +38,15 @@ const ground = new Schema({
       type: [Number],
       required: true
     }
+  },
+  createdOn: { 
+    type: Date,
+    required: true 
+  },
+lastEdited: { 
+    type: String,
+    required: true 
   }
 })
-
-//ground.post('findOneAndDelete',async function (campground) {
-//  if (campground.reviews.length){
-//await Review.deleteMany({_id : { $in : campground.reviews}})
-//  }
-//})
 
 export default mongoose.model('Ground',ground)

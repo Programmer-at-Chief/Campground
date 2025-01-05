@@ -14,24 +14,87 @@ import passport from 'passport';
 import passport_local from 'passport-local'
 import User from './models/user.mjs';
 import user from './routes/user.mjs';
+import custom from './routes/custom.mjs'
+import MongoSanitize from 'express-mongo-sanitize';
+import helmet from 'helmet';
+import MongoStore from 'connect-mongo';
 
-configDotenv()
+
 const key = process.env.SECRET_KEY
+const dbUrl = 'mongodb://localhost:27017/project' 
 
-mongoose.connect('mongodb://localhost:27017/project')
+mongoose.connect(dbUrl)
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname)
 
 const app = express()
 
+const scriptSrcUrls = [
+  "https://js.radar.com/v4.4.8/",
+    "https://api.radar.io/",
+    "https://kit.fontawesome.com/",
+    "https://cdnjs.cloudflare.com/",
+    "https://cdn.jsdelivr.net",
+];
+const styleSrcUrls = [
+  "https://js.radar.com/v4.4.8/",
+    "https://kit-free.fontawesome.com/",
+    "https://api.radar.io/",
+    "https://fonts.googleapis.com/",
+    "https://use.fontawesome.com/",
+];
+const connectSrcUrls = [
+    "https://api.radar.io/",
+];
+const fontSrcUrls = [];
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:",
+                "https://res.cloudinary.com/meinkampf/", 
+                "https://images.unsplash.com/",
+            ],
+            fontSrc: ["'self'", ...fontSrcUrls, 'https://radar.com/static/font/'],
+        },
+    })
+);
+
 app.engine('ejs',ejs_mate)
+app.use(MongoSanitize())
+
+if (process.env.NODE_ENV !== 'production'){
+  configDotenv()
+}
+
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  secret : process.env.MONGO_SECRET ,
+  touchAfter : 24 * 3600,
+  autoRemove: true
+})
+
+store.on('error',function(e){
+  console.log('Session Store Error',e);
+})
 
 const sessionConfig = {
+  store : store,
+  name : 'session',
   secret : key ,
   resave : false,
   saveUninitialized : true,
   cookie : {
     httpOnly : true,
+    //secure : true,
     expires : Date.now() + 1000*60*60*24*7, // a week 
     maxAge : 1000*60*60*24*7
   }
@@ -61,6 +124,9 @@ passport.serializeUser(User.serializeUser())
 passport.deserializeUser(User.deserializeUser())
 
 app.use((req,res,next) =>{
+  const clientIp = req.headers['x-forwarded-for'] || req.ip;
+  req.session.clientIp = clientIp;
+
   res.locals.currentUser = req.user
   res.locals.success = req.flash('success')
   res.locals.error = req.flash('error')
@@ -71,7 +137,8 @@ app.use((req,res,next) =>{
 
 app.use('/campgrounds',campgrounds)
 app.use('/campgrounds/:id/reviews',review)
-app.use('/',user)
+app.use('/user',user)
+app.use('/',custom)
 
 
 app.all('/:url',(req,res,next) => {
