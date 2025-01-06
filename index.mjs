@@ -4,7 +4,6 @@ import session from 'express-session'
 import flash from 'connect-flash'
 import path from 'path';
 import mongoose from 'mongoose';
-import {CampgroundSchema,ReviewSchema} from './schemas.mjs'
 import ExpressError from './utils/ExpressError.mjs'
 import methodOverride from 'method-override'
 import ejs_mate from 'ejs-mate'
@@ -19,10 +18,9 @@ import MongoSanitize from 'express-mongo-sanitize';
 import helmet from 'helmet';
 import MongoStore from 'connect-mongo';
 
-
 const key = process.env.SECRET_KEY
-//const dbUrl = 'mongodb://localhost:27017/project' 
-const dbUrl = process.env.DB_URL 
+const dbUrl = 'mongodb://localhost:27017/project' 
+//const dbUrl = process.env.DB_URL 
 
 mongoose.connect(dbUrl)
 
@@ -51,10 +49,16 @@ const fontSrcUrls = [];
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
-            defaultSrc: [],
+            defaultSrc: ["'self'"],
             connectSrc: ["'self'", ...connectSrcUrls],
-            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
-            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            scriptSrc: ["'unsafe-inline'",
+        "'self'",
+        "https://js.radar.com/v4.4.8/",
+        ...scriptSrcUrls],
+            styleSrc: ["'self'",
+        "'unsafe-inline'",
+        "https://js.radar.com/v4.4.8/",
+        ...styleSrcUrls],
             workerSrc: ["'self'", "blob:"],
             objectSrc: [],
             imgSrc: [
@@ -63,8 +67,9 @@ app.use(
                 "data:",
                 "https://res.cloudinary.com/meinkampf/", 
                 "https://images.unsplash.com/",
+                "http://localhost:3000",
             ],
-            fontSrc: ["'self'", ...fontSrcUrls, 'https://radar.com/static/font/'],
+            fontSrc: ["'self'", 'https://radar.com/static/font/', ...fontSrcUrls],
         },
     })
 );
@@ -110,8 +115,8 @@ db.once('open',() => {
 });
 
 app.use(flash())
-app.use(express.static(path.join(path.resolve(), 'public')));
-app.use(express.static(path.join(path.resolve(), 'views')));
+app.use(express.static(path.join(__dirname , 'public')));
+app.use(express.static(path.join(__dirname, 'views')));
 app.set('view engine','ejs')
 app.set('views',path.join(__dirname,'views'))
 app.use(express.urlencoded({extended : true}))
@@ -127,7 +132,7 @@ passport.deserializeUser(User.deserializeUser())
 app.use((req,res,next) =>{
   const clientIp = req.headers['x-forwarded-for'] || req.ip;
   req.session.clientIp = clientIp;
-
+  
   res.locals.currentUser = req.user
   res.locals.success = req.flash('success')
   res.locals.error = req.flash('error')
@@ -142,15 +147,14 @@ app.use('/user',user)
 app.use('/',custom)
 
 
-app.all('/:url',(req,res,next) => {
-  const {url} = req.params
-  next(new ExpressError(`/${url} not found`,404,url));
-})
-
 app.get('/',(req,res) =>{
   res.render("campgrounds/home.ejs")
 })
 
+app.all('/:url',(req,res,next) => {
+  const {url} = req.params
+  next(new ExpressError(`/${url} not found`,404,url));
+})
 
 app.use((err,req,res,next) => {
   const {message ,status = 500,url} = err
@@ -165,6 +169,8 @@ app.use((err,req,res,next) => {
   }
 })
 
-app.listen(3000,()=>{
+const port = process.env.PORT || 3000;
+
+app.listen(port,()=>{
   console.log("Listening on 3000")
 })
